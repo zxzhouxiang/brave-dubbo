@@ -1,2 +1,4 @@
 braveConsumerFilter=com.github.kristofa.brave.dubbo.BraveConsumerFilter
 braveProviderFilter=com.github.kristofa.brave.dubbo.BraveProviderFilter
+dubboBraveConsumerFilter=com.github.kristofa.brave.dubbox.filter.DubboBraveConsumerFilter
+dubboBraveProviderFilter=com.github.kristofa.brave.dubbox.filter.DubboBraveProviderFilter
