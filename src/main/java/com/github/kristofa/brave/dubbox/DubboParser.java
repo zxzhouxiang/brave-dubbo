@@ -24,7 +24,7 @@ public class DubboParser {
         if (dubboStatus != null ) {
             customizer.tag("dubbo.status", dubboStatus);
         }
-        if(dubboStatus!="success"){
+        if(!dubboStatus.equals("success")){
             String message=resp!=null?adapter.error(resp):null;
             customizer.tag("dubbo.error",message);
         }

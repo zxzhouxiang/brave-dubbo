@@ -11,8 +11,8 @@ public class DubboProviderParser extends DubboParser {
         super.request(adapter, req, customizer);
     }
 
-    public <Resp> void response(DubboAdapter<?, Resp> adapter, @Nullable Resp res, @Nullable Throwable error, SpanCustomizer customizer) {
-        super.response(adapter, res, error, customizer);
+    public <Req,Resp> void response(DubboAdapter<?, Resp> adapter, @Nullable Req req, @Nullable Resp resp, SpanCustomizer customizer) {
+        super.response(adapter, req, resp, customizer);
     }
 
 }
