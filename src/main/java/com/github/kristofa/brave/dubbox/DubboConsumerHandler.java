@@ -40,15 +40,15 @@ public final class DubboConsumerHandler<context,Req,Resp>{
 //        return this.handleSend(injector, carrier, request,resp);
 //    }
 
-    public <context> Span handleSend(Injector<context> injector, context carrier, Req request,Resp resp) {
-        return this.handleSend(injector, carrier, request,resp, this.nextSpan(request));
+    public <context> Span handlReceive(Injector<context> injector, context carrier, Req request,Resp resp) {
+        return this.handlReceive(injector, carrier, request,resp, this.nextSpan(request));
     }
 
 //    public Span handleSend(Injector<context> injector, Req request,Resp resp, Span span) {
 //        return this.handleSend(injector, , request,resp, span);
 //    }
 
-    public <context> Span handleSend(Injector<context> injector, context carrier, Req request,Resp resp, Span span) {
+    public <context> Span handlReceive(Injector<context> injector, context carrier, Req request,Resp resp, Span span) {
         injector.inject(span.context(), carrier);
         if (span.isNoop()) {
             return span;
@@ -57,7 +57,7 @@ public final class DubboConsumerHandler<context,Req,Resp>{
             SpanInScope ws = this.tracer.withSpanInScope(span);
 
             try {
-                this.parser.response(this.adapter, request,resp, span);
+                this.parser.request(this.adapter, request, span);
             } finally {
                 ws.close();
             }
@@ -91,12 +91,12 @@ public final class DubboConsumerHandler<context,Req,Resp>{
         }
     }
 
-    public void handleReceive(@Nullable Req req, Span span) {
+    public void handlSend(@Nullable Req req,Resp resp, Span span) {
         if (!span.isNoop()) {
             SpanInScope ws = this.tracer.withSpanInScope(span);
 
             try {
-                this.parser.request(this.adapter, req, span);
+                this.parser.response(this.adapter, req,resp, span);
             } finally {
                 ws.close();
                 span.finish();

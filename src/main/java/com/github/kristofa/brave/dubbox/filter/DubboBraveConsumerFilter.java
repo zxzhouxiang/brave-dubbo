@@ -1,6 +1,7 @@
 package com.github.kristofa.brave.dubbox.filter;
 
 
+import brave.Span;
 import brave.Tracer;
 import brave.propagation.Propagation;
 import brave.propagation.TraceContext;
@@ -19,6 +20,7 @@ public class DubboBraveConsumerFilter implements Filter {
     private static final Propagation.Setter<RpcContext,String>SETTER=new Propagation.Setter<RpcContext, String>() {
         @Override
         public void put(RpcContext rpcContext, String s, String s2) {
+            rpcContext.setAttachment(s,s2);
 
         }
     };
@@ -66,15 +68,15 @@ public class DubboBraveConsumerFilter implements Filter {
         @Override
         public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
             Result result=null;
-            this.injector.inject(tracer.nextSpan().context(),RpcContext.getContext());
-            this.handler.handleReceive(invocation,this.tracer.currentSpan());
+            Span span=this.handler.nextSpan(invocation);
+            this.handler.handlReceive(injector,RpcContext.getContext(),invocation,result,span);
             try {
                result=  invoker.invoke(invocation);
-                 this.handler.handleSend(injector,RpcContext.getContext(),invocation,result,this.tracer.currentSpan());
+                 this.handler.handlSend(invocation,result,span);
             }catch (Exception ex){
                 result=new RpcResult();
                 ((RpcResult)result).setException(ex);
-                this.handler.handleSend(injector,RpcContext.getContext(),invocation,result,this.tracer.currentSpan());
+                this.handler.handlSend(invocation,result,span);
             }finally {
 
             }

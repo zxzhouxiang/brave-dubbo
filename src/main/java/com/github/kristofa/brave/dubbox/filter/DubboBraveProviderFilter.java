@@ -60,7 +60,6 @@ public class DubboBraveProviderFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         Result result=null;
-//        this.extractor.extract(RpcContext.getContext());
         this.handler.handleReceive(extractor,RpcContext.getContext(),invocation);
         try {
             result = invoker.invoke(invocation);
